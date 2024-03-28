@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<ctype.h>
+
+void ceaserencrypt(char* mes, int key);
+void ceaserdecrypt(char* mes, int key);
+
+int main()
+{
+    char mes[100];
+    int key;
+    printf("Enter the message: ");
+    fgets(mes,sizeof(mes),stdin);
+    printf("Enter the key value: ");
+    scanf("%d",&key);
+    ceaserencrypt(mes,key);
+    printf("Encrypted message: %s",mes);
+    ceaserdecrypt(mes,key);
+    printf("Decrypted message: %s",mes);
+    return 0;
+}
+
+void ceaserencrypt(char *mes, int key)
+{
+    for(int i=0;mes[i]!='\0';i++)
+        if(isalpha(mes[i]))
+            if(islower(mes[i]))
+                mes[i]='a'+(mes[i]-'a'+key)%26;
+            else if(isupper(mes[i]))
+                mes[i]='A'+(mes[i]-'A'+key)%26;
+}
+
+void ceaserdecrypt(char *mes, int key)
+{
+    for(int i=0;mes[i]!='\0';i++)
+        if(isalpha(mes[i]))
+            if(islower(mes[i]))
+                mes[i]='a'+(mes[i]-'a'-key+26)%26;
+            else if(isupper(mes[i]))
+                mes[i]='A'+(mes[i]-'A'-key+26)%26;
+}
