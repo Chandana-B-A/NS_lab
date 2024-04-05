@@ -1,0 +1,44 @@
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
+
+char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+char key[] = "QWERTYUIOPASDFGHJKLZXCVBNM";
+
+char encrypt(char ch){
+    if(!isalpha(ch))
+        return ch;
+    char *p = strchr(alphabet, toupper(ch));
+    if(p == NULL)
+        return ch;
+    int index = p - alphabet;
+    return isupper(ch) ? key[index] : tolower(key[index]);
+}
+
+char decrypt(char ch){
+    if(!isalpha(ch))
+        return ch;
+    char *p = strchr(key, toupper(ch));
+    if(p == NULL)
+        return ch;
+    int index = p - key;
+    return isupper(ch) ? alphabet[index] : tolower(alphabet[index]);
+}
+
+void encrypt_decrypt(char *message, char (*func)(char)){
+    for(int i = 0; message[i] != '\0'; i++)
+        message[i] = func(message[i]);
+}
+
+int main(){
+    char message[100];
+    printf("Enter message:");
+    fgets(message, sizeof(message), stdin);
+    printf("Original message:%s\n", message);
+    encrypt_decrypt(message, encrypt);
+    printf("Encrypted message:%s\n", message);
+    encrypt_decrypt(message, decrypt);
+    printf("Decrypted message:%s\n", message);
+    return 0;
+}
+
