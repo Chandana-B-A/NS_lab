@@ -1,0 +1,53 @@
+#include<stdio.h>
+#include<math.h> 
+
+#define P 23 // A prime number
+#define G 5 // A primitive root modulo P
+
+// Function to perform modular exponentiation
+int mod_exp(int base, int exp, int mod) {
+    int result = 1;
+    base = base % mod;
+    while (exp > 0) {
+        if (exp % 2 == 1)
+            result = (result * base) % mod;
+        exp /= 2;
+        base = (base * base) % mod;
+    }
+    return result;
+}
+
+// Function to perform Diffie-Hellman Key Exchange
+void diffie_hellman(int private_key, int *public_key) {
+    *public_key = mod_exp(G, private_key, P);
+}
+
+int main() {
+    int private_key_client, private_key_server;
+    int public_key_client, public_key_server;
+    int shared_secret_client, shared_secret_server;
+    
+    
+    // Get user inputs for private keys
+    printf("Enter private key for client: ");
+    scanf("%d", &private_key_client);
+    
+    printf("Enter private key for server: ");
+    scanf("%d", &private_key_server);
+    
+    // Perform Diffie-Hellman Key Exchange for client
+    diffie_hellman(private_key_client, &public_key_client);
+    
+    // Perform Diffie-Hellman Key Exchange for server
+    diffie_hellman(private_key_server, &public_key_server);
+    
+    // Calculate shared secrets
+    shared_secret_client = mod_exp(public_key_server, private_key_client, P);
+    shared_secret_server = mod_exp(public_key_client, private_key_server, P);
+    
+    // Print shared secrets
+    printf("Client shared secret: %d\n", shared_secret_client);
+    printf("Server shared secret: %d\n", shared_secret_server);
+    
+    return 0;
+}
