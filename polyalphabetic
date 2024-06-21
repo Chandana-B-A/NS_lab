@@ -1,0 +1,52 @@
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
+#define ALPHABET_SIZE 26
+
+char encrypt(char plaintext, char key) {
+    int p = tolower(plaintext) - 'a';
+    int k = tolower(key) - 'a';
+    int ciphertext = (p + k) % ALPHABET_SIZE;
+    return 'a' + ciphertext;
+}
+
+char decrypt(char ciphertext, char key) {
+    int c = tolower(ciphertext) - 'a';
+    int k = tolower(key) - 'a';
+    int plaintext = (c - k + ALPHABET_SIZE) % ALPHABET_SIZE;
+    if (plaintext < 0) {
+        plaintext += ALPHABET_SIZE; // Ensure the result is positive
+    }
+    return 'a' + plaintext;
+}
+
+int main() {
+    char key[100];
+    char plaintext[100];
+    char ciphertext[100];
+    char decryptedtext[100];
+    
+    printf("Enter the key: ");
+    fgets(key, sizeof(key), stdin);
+    key[strcspn(key, "\n")] = '\0'; // Remove newline character
+    
+    printf("Enter the plaintext: ");
+    fgets(plaintext, sizeof(plaintext), stdin);
+    plaintext[strcspn(plaintext, "\n")] = '\0'; // Remove newline character
+    
+    // Encrypt the plaintext
+    for (int i = 0; i < strlen(plaintext); i++) {
+        ciphertext[i] = encrypt(plaintext[i], key[i % strlen(key)]);
+    }
+    ciphertext[strlen(plaintext)] = '\0';
+    printf("Ciphertext: %s\n", ciphertext);
+    
+    // Decrypt the ciphertext
+    for (int i = 0; i < strlen(ciphertext); i++) {
+        decryptedtext[i] = decrypt(ciphertext[i], key[i % strlen(key)]);
+    }
+    decryptedtext[strlen(ciphertext)] = '\0';
+    printf("Decrypted text: %s\n", decryptedtext);
+    
+    return 0;
+}
